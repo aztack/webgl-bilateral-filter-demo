@@ -211,14 +211,15 @@
     loadShader: loadShader,
     createProgram: createProgram,
     createProgramFromSources: createProgramFromSources,
+    createBufferFromTypedArray: createBufferFromTypedArray,
     resizeCanvasToDisplaySize: resizeCanvasToDisplaySize,
   };
 });
 
-const __DEV__ = true;
+const __DEV__ = false;
 const winSize = 5;
 
-function decodeShaderSourceCode() {
+function decodeShaderSourceCode(e) {
   var t = new Uint8Array([99, 114, 121, 112, 116, 105, 105]);
   n = t.length;
   r = e;
@@ -247,14 +248,14 @@ const Re = [31, 222, 239, 159, 192, 236, 164, 81, 54, 227, 176, 149, 2, 247, 75,
 
 function createCustomProgram(gl, sourceArray) {
   const fnBody = decodeShaderSourceCode(sourceArray);
-  const prog = glUtil.createProgramFromSources(e, [decodeShaderSourceCode(Re), fnBody]);
+  const prog = glUtil.createProgramFromSources(gl, [decodeShaderSourceCode(Re), fnBody]);
 
-  const aPosition = gl.getAttribLocation(r, "a_position");
+  const aPosition = gl.getAttribLocation(prog, "a_position");
   glUtil.createBufferFromTypedArray(gl, new Float32Array([0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]));
   gl.enableVertexAttribArray(aPosition);
   gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
 
-  const aTextCoord = gl.getAttribLocation(r, "a_texCoord");
+  const aTextCoord = gl.getAttribLocation(prog, "a_texCoord");
   glUtil.createBufferFromTypedArray(gl, new Float32Array([0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]));
   gl.enableVertexAttribArray(aTextCoord);
   gl.vertexAttribPointer(aTextCoord, 2, gl.FLOAT, false, 0, 0);
@@ -296,7 +297,7 @@ function createCustomProgram(gl, sourceArray) {
   var xe = [11, 196, 242, 139, 198, 252, 188, 5, 59, 170, 161, 152, 17, 229, 24, 141, 133, 54, 214, 206, 133, 26, 66, 126, 255, 11, 245, 10, 146, 92, 52, 134, 108, 152, 221, 191, 124, 116, 248, 106, 130, 251, 59, 105, 43, 91, 135, 199, 181, 223, 10, 51, 134, 194, 240, 46, 9, 3, 141, 22, 35, 146, 76, 23, 109, 117, 208, 41, 201, 45, 218, 76, 203, 105, 51, 58, 97, 154, 145, 236, 49, 18, 183, 127, 27, 12, 210, 122, 73, 42, 37, 143, 36, 207, 251, 211, 145, 191, 56, 10, 88, 222, 181, 125, 22, 238, 123, 71, 177, 107, 218, 254, 173, 28, 34, 253, 249, 67, 83, 97, 73, 111, 219, 43, 181, 82, 38, 230, 136, 109, 22, 67];
   function Ne(e, t, n) {
     var r = e.gl;
-    this.program = Ae(r, xe), this.setUniforms = function() {
+    this.program = createCustomProgram(r, xe), this.setUniforms = function() {
       r.getUniformLocation(this.program, "u_image");
       var e = r.getUniformLocation(this.program, "u_flipY");
       r.uniform1f(e, 1)
@@ -311,7 +312,7 @@ function createCustomProgram(gl, sourceArray) {
       i = 1 / t,
       a = 1 / n,
       o = 5;
-    this.program = Ae(r, Pe), this.setUniforms = function() {
+    this.program = createCustomProgram(r, Pe), this.setUniforms = function() {
       r.getUniformLocation(this.program, "u_image");
       var e = r.getUniformLocation(this.program, "u_flipY"),
           t = r.getUniformLocation(this.program, "u_singleStepOffset"),
@@ -334,7 +335,7 @@ function Le(e, t, n) {
         i = 1 / t,
         a = 1 / n,
         o = 5;
-    this.program = Ae(r, Me), this.setUniforms = function() {
+    this.program = createCustomProgram(r, Me), this.setUniforms = function() {
         r.getUniformLocation(this.program, "u_image");
         var e = r.getUniformLocation(this.program, "u_flipY"),
             t = r.getUniformLocation(this.program, "u_singleStepOffset"),
@@ -357,7 +358,7 @@ function Ue(e, t, n) {
         i = 1 / t,
         a = 1 / n,
         o = 5;
-    this.program = Ae(r, je), this.setUniforms = function() {
+    this.program = createCustomProgram(r, je), this.setUniforms = function() {
         r.getUniformLocation(this.program, "u_image");
         var e = r.getUniformLocation(this.program, "u_flipY"),
             t = r.getUniformLocation(this.program, "u_singleStepOffset"),
@@ -392,7 +393,7 @@ function Fe(e, t, n) {
     v = [0, 1, 3, 4, 6, 7, 9, 10, 12, 13, 15, 16, 18, 19, 21, 22, 24, 26, 29, 31, 34, 36, 39, 41, 44, 46, 49, 51, 54, 56, 59, 61, 64, 65, 66, 67, 68, 69, 70, 72, 73, 74, 75, 76, 77, 79, 80, 81, 82, 83, 84, 85, 87, 88, 89, 90, 91, 92, 94, 95, 96, 97, 98, 99, 101, 102, 103, 104, 105, 106, 107, 109, 110, 111, 112, 113, 114, 116, 117, 118, 119, 120, 121, 123, 124, 125, 126, 127, 128, 129, 131, 132, 133, 134, 135, 136, 138, 139, 140, 141, 142, 143, 145, 146, 147, 148, 149, 150, 151, 153, 154, 155, 156, 157, 158, 160, 161, 162, 163, 164, 165, 166, 168, 169, 170, 171, 172, 173, 175, 176, 177, 178, 179, 180, 182, 183, 184, 185, 186, 187, 188, 190, 191, 192, 193, 194, 195, 197, 198, 199, 200, 201, 202, 204, 205, 206, 207, 208, 209, 210, 212, 213, 214, 215, 216, 217, 219, 220, 221, 222, 223, 224, 226, 226, 226, 227, 227, 227, 228, 228, 228, 229, 229, 229, 230, 230, 231, 231, 231, 232, 232, 232, 233, 233, 233, 234, 234, 235, 235, 235, 236, 236, 236, 237, 237, 237, 238, 238, 239, 239, 239, 240, 240, 240, 241, 241, 241, 242, 242, 243, 243, 243, 244, 244, 244, 245, 245, 245, 246, 246, 246, 247, 247, 247, 248, 248, 248, 249, 249, 249, 250, 250, 250, 251, 251, 251, 252, 252, 252, 253, 253, 253, 254, 254, 254, 255],
     h = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 32, 33, 35, 36, 37, 39, 40, 42, 43, 44, 46, 47, 49, 50, 51, 53, 54, 56, 57, 58, 59, 61, 62, 63, 64, 66, 67, 68, 69, 71, 72, 73, 74, 76, 77, 78, 79, 81, 82, 83, 84, 86, 87, 88, 90, 91, 92, 93, 95, 96, 97, 98, 100, 101, 102, 103, 105, 106, 107, 108, 110, 111, 112, 113, 115, 116, 117, 118, 120, 121, 122, 124, 125, 126, 127, 129, 130, 131, 132, 134, 135, 136, 137, 139, 140, 141, 142, 144, 145, 146, 147, 149, 150, 151, 152, 154, 155, 156, 158, 159, 160, 161, 163, 164, 165, 166, 168, 169, 170, 171, 173, 174, 175, 176, 178, 179, 180, 181, 183, 184, 185, 186, 188, 189, 190, 192, 193, 194, 195, 197, 198, 199, 200, 202, 203, 204, 205, 207, 208, 209, 210, 212, 213, 214, 215, 217, 218, 219, 220, 222, 223, 224, 226, 226, 226, 227, 227, 228, 228, 229, 229, 230, 230, 231, 231, 232, 232, 233, 233, 234, 234, 234, 235, 235, 236, 236, 237, 237, 238, 238, 239, 239, 240, 240, 241, 241, 242, 242, 243, 243, 243, 244, 244, 244, 245, 245, 245, 246, 246, 246, 247, 247, 247, 248, 248, 248, 249, 249, 249, 250, 250, 250, 251, 251, 251, 252, 252, 252, 253, 253, 253, 254, 254, 254, 255],
     y = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 39, 40, 41, 43, 44, 45, 46, 47, 48, 50, 51, 52, 53, 54, 55, 56, 58, 59, 60, 61, 62, 63, 65, 66, 67, 68, 69, 70, 72, 73, 74, 76, 77, 78, 80, 81, 83, 84, 85, 87, 88, 89, 91, 92, 94, 95, 96, 98, 99, 100, 102, 103, 105, 106, 107, 109, 110, 111, 113, 114, 116, 117, 118, 120, 121, 122, 124, 125, 127, 128, 129, 131, 132, 133, 135, 136, 138, 139, 140, 142, 143, 144, 146, 147, 149, 150, 151, 153, 154, 155, 157, 158, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 192, 193, 193, 194, 195, 195, 196, 197, 197, 198, 199, 199, 200, 201, 201, 202, 203, 203, 204, 205, 205, 206, 207, 207, 208, 209, 209, 210, 211, 211, 212, 213, 213, 214, 215, 215, 216, 217, 217, 218, 219, 219, 220, 221, 221, 222, 223, 223, 224, 225, 225, 226, 227, 227, 228, 229, 229, 230, 231, 231, 232, 233, 233, 234, 235, 235, 236, 237, 237, 238, 239, 239, 240, 241, 241, 242, 243, 243, 244, 245, 245, 246, 247, 247, 248, 249, 249, 250, 251, 251, 252, 253, 253, 254, 255];
-  this.program = Ae(r, Ve), this.setUniforms = function() {
+  this.program = createCustomProgram(r, Ve), this.setUniforms = function() {
     var t = r.getUniformLocation(this.program, "u_flipY"),
         n = r.getUniformLocation(this.program, "u_denoiseLevel");
     r.uniform1f(n, i), r.uniform1f(t, 1);
@@ -444,7 +445,7 @@ function Fe(e, t, n) {
       this.programs.push(new Le(this, videoWidth, videoHeight));
       this.programs.push(new Ue(this, videoWidth, videoHeight));
       this.programs.push(new Fe(this, videoWidth, videoHeight));
-      this.firstProgram = this.programs[0];
+      this.firstProgram = this.programs[0].program;
     },
     release: function () {
       this.gl = null;
@@ -472,7 +473,7 @@ function Fe(e, t, n) {
           }
           var frameBuf = gl.createFramebuffer();
           gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuf);
-          gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, u, 0);
+          gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.inputTexture, 0);
           this.textures.push(tex);
           this.frameBuffers.push(frameBuf);
       }
@@ -482,6 +483,42 @@ function Fe(e, t, n) {
     },
     setEnableBeauty (val) {
       BeautyEffectEnabled = val;
+    },
+    isEanbled() {
+      return BeautyEffectEnabled;
+    },
+    render(video) {
+      if (this.gl) {
+        const gl = this.gl;
+        var c = 0;
+        if (this.videoWidth == video.videoWidth && this.videoHeight === video.videoHeight) {
+          c = 2;
+        }
+        gl.viewport(0, 0, video.videoWidth, video.videoHeight);
+        gl.bindTexture(gl.TEXTURE_2D, this.inputTexture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
+        for (var u = BeautyEffectEnabled ? this.programs.length - 1 : 0, l = 0; l <= u; l++) {
+            var prog = this.programs[l].program;
+            gl.useProgram(prog);
+            var f = gl.getUniformLocation(prog, "u_image");
+            this.programs[l].setUniforms();
+            gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffers[c + l % 2]);
+            gl.clearColor(0, 0, 0, 1);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, this.textures[c + l % 2]);
+            gl.uniform1i(f, 0);
+        }
+        // first program
+        gl.useProgram(this.firstProgram);
+        var p = gl.getUniformLocation(this.firstProgram, "u_flipY");
+        gl.uniform1f(p, -1);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.clearColor(0, 0, 0, 1);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
     }
   });
 
@@ -507,7 +544,7 @@ function Fe(e, t, n) {
 
   var canvas = null;
   var video = null;
-  host.glUtil.renderWithWebGL = function (canvas, srcObject) {
+  host.glUtil.renderWithWebGL = function (canvas, video, srcObject, enableBeautyEffect) {
     return new Promise(function (resolve) {
       if (!canvas) {
         canvas = document.createElement('canvas');
@@ -538,6 +575,7 @@ function Fe(e, t, n) {
         const stream = canvas.captureStream(30);
         video.removeEventListener('playing', onPlaying, false);
         resolve([stream.getVideoTracks()[0], video]);
+        if (enableBeautyEffect) host.glUtil.enableEffect(video);
       }, false);
       video.play();
     });
@@ -545,11 +583,19 @@ function Fe(e, t, n) {
   host.glUtil.release = function () {
     BeautyEffect.getInstance().release();
   };
-  host.glUtil.enableEffect = function () {
+  host.glUtil.enableEffect = function (video) {
     const effect = BeautyEffect.getInstance();
+    effect.setEnableBeauty(true);
     window.requestAnimationFrame(function rafcb() {
-      effect.render();
+      effect.render(video);
       window.requestAnimationFrame(rafcb);
     })
   };
+  window.addEventListener('onunload', function() {
+    const ins = BeautyEffect.getInstance();
+    if (ins.isEanbled()) {
+      console.log('Release effect');
+      ins.release();
+    }
+  });
 })(this);
