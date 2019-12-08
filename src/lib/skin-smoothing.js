@@ -409,9 +409,19 @@ function Fe(e, t, n) {
         T = r.getUniformLocation(this.program, "facts_rotate_c"),
         I = r.getUniformLocation(this.program, "facts_rotate_le"),
         O = r.getUniformLocation(this.program, "facts_rotate_ge");
-    r.uniform1f(y, s), r.uniform1f(b, c), r.uniform1f(S, u), r.uniform1f(E, l), r.uniform1f(_, d), r.uniform1f(T, f), r.uniform1f(I, p), r.uniform1f(O, m);
+    r.uniform1f(y, s);
+    r.uniform1f(b, c);
+    r.uniform1f(S, u);
+    r.uniform1f(E, l);
+    r.uniform1f(_, d);
+    r.uniform1f(T, f);
+    r.uniform1f(I, p);
+    r.uniform1f(O, m);
+    
     var C = r.getUniformLocation(this.program, "u_originImage");
-    r.activeTexture(r.TEXTURE2), r.bindTexture(r.TEXTURE_2D, e.inputTexture), r.uniform1i(C, 2);
+    r.activeTexture(r.TEXTURE2);
+    r.bindTexture(r.TEXTURE_2D, e.inputTexture);
+    r.uniform1i(C, 2);
     for (var w = ["lighten_lut"], R = [r.TEXTURE3], k = 0; k < w.length; k++) {
         var A = r.getUniformLocation(this.program, w[k]);
         r.activeTexture(R[k]), r.bindTexture(r.TEXTURE_2D, g[k]), r.uniform1i(A, k + 3)
@@ -528,7 +538,47 @@ function Fe(e, t, n) {
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
       }
-    }
+    },
+    _removeEffectFromLocalPlayer: function () {},
+    _releaseEffect() {
+      const ret = !BeautyEffectEnabled ? this._disableEffect() : Promise.resolve();
+      this.release();
+      return ret;
+    },
+    _disableEffect() {
+      console.trace('TODO://disable effect');
+    },
+    setBeautyEffectOptions(isEnabled, opts) {
+      this.setEnableBeauty(isEnabled);
+      if (isEnabled) {
+        if (!opts) return;
+        if (opts.smoothnessLevel != undefined) {
+          let smoothnessLevel = opts.smoothnessLevel;
+          if (smoothnessLevel * 10 < 0.1) smoothnessLevel = 0.1;
+          this.setDenoiseLevel(smoothnessLevel);
+        }
+        if (opts.lighteningLevel != undefined) {
+          let lighteningLevel = opts.lighteningLevel;
+          if (lighteningLevel /2 < 0.01) {
+            lighteningLevel = 0.01
+          }
+          this.setLightLevel(lighteningLevel);
+        }
+        if (opts.rednessLevel != undefined) {
+          let rednessLevel = opts.rednessLevel;
+          if (rednessLevel < 0.01) {
+            rednessLevel = 0.01
+          }
+          this.setRednessLevel(rednessLevel);
+        }
+        if (opts.lighteningContrastLevel === 0 || opts.lighteningContrastLevel === 1 || opts.lighteningContrastLevel === 2) {
+          this.setContrastLevel(parseFloat(opts.lighteningContrastLevel));
+        }
+      } else {
+        this._removeEffectFromLocalPlayer();
+        this._releaseEffect();
+      }
+    },
   });
 
   genMethod('setDenoiseLevel', 'denoiseLevel');
@@ -573,7 +623,7 @@ function Fe(e, t, n) {
       video.setAttribute('width', videoSettings.width);
       video.setAttribute('height', videoSettings.height);
 
-      const beautyEffect = BeautyEffect.getInstance();
+      const beautyEffect = glUtil.beautyEffect = BeautyEffect.getInstance();
       beautyEffect.init(video.width, video.height, canvas);
       const opts = BeautyEffect.getDefaultOpts();
       beautyEffect.setDenoiseLevel(opts.denoiseLevel);
