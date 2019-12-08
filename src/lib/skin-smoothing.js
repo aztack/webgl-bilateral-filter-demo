@@ -416,23 +416,32 @@ function Fe(e, t, n) {
         var A = r.getUniformLocation(this.program, w[k]);
         r.activeTexture(R[k]), r.bindTexture(r.TEXTURE_2D, g[k]), r.uniform1i(A, k + 3)
     }
-  }, this.setParameters = function(e) {
+  };
+  
+  this.setParameters = function(e) {
     void 0 !== e.denoiseLevel && (i = e.denoiseLevel), void 0 !== e.lightLevel && (a = e.lightLevel), void 0 !== e.rednessLevel && (o = e.rednessLevel, this._updateRedness(o)), void 0 !== e.lighteningContrastLevel && this._updateLut(e.lighteningContrastLevel)
-  }, this._updateRedness = function(e) {
+  };
+  
+  this._updateRedness = function(e) {
     var t, n, r = 3.141593,
       i = e,
       a = i;
     i > 1 && (i = 1), i < 0 && (i = 0), a > 1 && (a = 1), a < 0 && (a = 0), f = .8 * i, a < .8 && (a = 0), (d = (117 - 4 * a) / 180 * r) < (l = (116 - 4 * a) / 180 * r) && (d = l), l < r / 2 && (l = r / 2), d < r / 2 && (d = r / 2), (c = (115 - 4 * a) / 180 * r) < r / 2 && (c = r / 2), (u = 173 / 180 * r) > r && (u = r), d > r && (d = r), (s = 175 / 180 * r) > r && (s = r), n = u - d, m = (t = s - u) > .01 ? f * n / t : f, n = d - l, p = (t = l - c) > .01 ? f * n / t : f
-  }, this._updateLut = function(e) {
+  };
+  
+  this._updateLut = function(e) {
     var t = null;
     0 == e && (t = h), 1 == e && (t = y), 2 == e && (t = v);
     for (var n = [new Uint8Array(t)], i = [256], a = [1], o = 0; o < n.length; o++) r.bindTexture(r.TEXTURE_2D, g[o]), r.texImage2D(r.TEXTURE_2D, 0, r.LUMINANCE, i[o], a[o], 0, r.LUMINANCE, r.UNSIGNED_BYTE, n[o])
-  }, this._init = function() {
+  };
+  
+  this._init = function() {
     for (var e = [new Uint8Array(h)], t = [256], n = [1], i = 0; i < e.length; i++) {
       var a = r.createTexture();
       r.bindTexture(r.TEXTURE_2D, a), r.texImage2D(r.TEXTURE_2D, 0, r.LUMINANCE, t[i], n[i], 0, r.LUMINANCE, r.UNSIGNED_BYTE, e[i]), r.texParameteri(r.TEXTURE_2D, r.TEXTURE_WRAP_S, r.CLAMP_TO_EDGE), r.texParameteri(r.TEXTURE_2D, r.TEXTURE_WRAP_T, r.CLAMP_TO_EDGE), r.texParameteri(r.TEXTURE_2D, r.TEXTURE_MIN_FILTER, r.LINEAR), r.texParameteri(r.TEXTURE_2D, r.TEXTURE_MAG_FILTER, r.LINEAR), g.push(a)
     }
-  }, this._init()
+  };
+  this._init();
 }
 
   Object.assign(BeautyEffect.prototype, {
@@ -473,7 +482,7 @@ function Fe(e, t, n) {
           }
           var frameBuf = gl.createFramebuffer();
           gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuf);
-          gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.inputTexture, 0);
+          gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
           this.textures.push(tex);
           this.frameBuffers.push(frameBuf);
       }
@@ -491,7 +500,7 @@ function Fe(e, t, n) {
       if (this.gl) {
         const gl = this.gl;
         var c = 0;
-        if (this.videoWidth == video.videoWidth && this.videoHeight === video.videoHeight) {
+        if (this.videoHeight === video.videoWidth && this.videoWidth === video.videoHeight) {
           c = 2;
         }
         gl.viewport(0, 0, video.videoWidth, video.videoHeight);
@@ -518,7 +527,7 @@ function Fe(e, t, n) {
         gl.clearColor(0, 0, 0, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
-    }
+      }
     }
   });
 
