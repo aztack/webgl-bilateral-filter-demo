@@ -221,12 +221,12 @@ const winSize = 5;
 
 function decodeShaderSourceCode(e) {
   var t = new Uint8Array([99, 114, 121, 112, 116, 105, 105]);
-  n = t.length;
-  r = e;
-  i = r.length;
-  a = new Uint8Array(i);
-  o = new Uint8Array(256);
-  for (s = 0; s < 256; s++) o[s] = s;
+  var n = t.length;
+  var r = e;
+  var i = r.length;
+  var a = new Uint8Array(i);
+  var o = new Uint8Array(256);
+  for (var s = 0; s < 256; s++) o[s] = s;
 
   for (var c = 0, u = 0; u < 256; u++) {
       var l = [o[c = (c + o[u] + t[u % n]) % 256], o[u]];
@@ -417,7 +417,7 @@ function Fe(e, t, n) {
     r.uniform1f(T, f);
     r.uniform1f(I, p);
     r.uniform1f(O, m);
-    
+
     var C = r.getUniformLocation(this.program, "u_originImage");
     r.activeTexture(r.TEXTURE2);
     r.bindTexture(r.TEXTURE_2D, e.inputTexture);
@@ -427,24 +427,24 @@ function Fe(e, t, n) {
         r.activeTexture(R[k]), r.bindTexture(r.TEXTURE_2D, g[k]), r.uniform1i(A, k + 3)
     }
   };
-  
+
   this.setParameters = function(e) {
     void 0 !== e.denoiseLevel && (i = e.denoiseLevel), void 0 !== e.lightLevel && (a = e.lightLevel), void 0 !== e.rednessLevel && (o = e.rednessLevel, this._updateRedness(o)), void 0 !== e.lighteningContrastLevel && this._updateLut(e.lighteningContrastLevel)
   };
-  
+
   this._updateRedness = function(e) {
     var t, n, r = 3.141593,
       i = e,
       a = i;
     i > 1 && (i = 1), i < 0 && (i = 0), a > 1 && (a = 1), a < 0 && (a = 0), f = .8 * i, a < .8 && (a = 0), (d = (117 - 4 * a) / 180 * r) < (l = (116 - 4 * a) / 180 * r) && (d = l), l < r / 2 && (l = r / 2), d < r / 2 && (d = r / 2), (c = (115 - 4 * a) / 180 * r) < r / 2 && (c = r / 2), (u = 173 / 180 * r) > r && (u = r), d > r && (d = r), (s = 175 / 180 * r) > r && (s = r), n = u - d, m = (t = s - u) > .01 ? f * n / t : f, n = d - l, p = (t = l - c) > .01 ? f * n / t : f
   };
-  
+
   this._updateLut = function(e) {
     var t = null;
     0 == e && (t = h), 1 == e && (t = y), 2 == e && (t = v);
     for (var n = [new Uint8Array(t)], i = [256], a = [1], o = 0; o < n.length; o++) r.bindTexture(r.TEXTURE_2D, g[o]), r.texImage2D(r.TEXTURE_2D, 0, r.LUMINANCE, i[o], a[o], 0, r.LUMINANCE, r.UNSIGNED_BYTE, n[o])
   };
-  
+
   this._init = function() {
     for (var e = [new Uint8Array(h)], t = [256], n = [1], i = 0; i < e.length; i++) {
       var a = r.createTexture();
